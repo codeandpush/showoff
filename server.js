@@ -8,14 +8,50 @@ const app = new bz.Bkendz({models})
 
 const port = process.env.PORT || 9000
 console.log(`starting monitoring server on ${port}...`)
-app.adminServer.listen(9000)
+app.listen(9000)
 
-class SoSessionHandler extends bz.SessionHandler {
+app.administerEnabled = true
+app.clientEnabled = true
 
-}
+app.admin.on('', (request) => {
+    request.respond({display: 'Hello World'})
+})
 
-const session = new SoSessionHandler()
+app.admin.onPrefChanged('')
 
-session.on('preference_changed', (messageHandler, prefName, ) => {
+app.admin.on('request', (messageHandler, request, conn) => {
+    console.log('REQ:', request)
+    messageHandler.respond(conn, request)
+})
 
+app.api.create(models.User, (messageHandler, request) => {
+
+})
+
+app.api.update(models.User, (messageHandler, request) => {
+    messageHandler.respond({display: 'Hello World'})
+})
+
+app.api.service('/authenticate', (messageHandler, request) => {
+
+})
+
+app.adminWs.messageHandler.on('subscription_added', subject => {
+        console.log('sending snapshot')
+        let models = require('./models')
+        let wsHandler = app.adminWs.messageHandler
+
+        models.User.all().then((users) => {
+            let updates = users.map(u => {
+                return {changeType: 'NEW', type: models.User.name, value: u.get({plain: true})}
+            })
+            wsHandler.emit('db_update', updates)
+        })
+
+        models.Presentation.all().then((items) => {
+            let updates = items.map(u => {
+                return {changeType: 'NEW', type: models.Presentation.name, value: u.get({plain: true})}
+            })
+            wsHandler.emit('db_update', updates)
+        })
 })
