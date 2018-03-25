@@ -4,7 +4,7 @@
 const bz = require('bkendz')
 const models = require('./models')
 const _ = require('lodash')
-const app = new bz.Bkendz({models})
+const app = new bz.Bkendz({models, apiSheet: require('./mas.json')})
 
 const port = process.env.PORT || 9001
 console.log(`starting monitoring server on ${port}...`)
@@ -16,7 +16,6 @@ app.clientEnabled = true
 const libDb = require('./lib/db')
 
 app.admin.on('request', (messageHandler, request, conn) => {
-    console.log('REQ:', request)
     
     if(request.topic.startsWith('/db_schema')){
         request = {
@@ -55,4 +54,9 @@ app.adminWs.handler.on('subscription_added', (subject) => {
                 wsHandler.emit('db_update', updates)
             })
         })
+})
+
+app.adminWs.handler.topic('/status', () => {
+    
+    return {data: {clients: app.admin.connections.length}}
 })

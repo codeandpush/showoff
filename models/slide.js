@@ -20,7 +20,8 @@ class Slide extends DbObject {
     static columnDefs(DataTypes) {
         return {
             title: DataTypes.STRING,
-            html: DataTypes.TEXT
+            html: DataTypes.TEXT,
+            createdById: DataTypes.INTEGER
         }
     }
     
@@ -31,7 +32,11 @@ class Slide extends DbObject {
             foreignKey: 'slideId',
             otherKey: 'presentationId'
         })
-        
+    
+        models.Slide.belongsTo(models.User, {
+            as: 'createdBy',
+            foreignKey: 'createdById'
+        })
     }
 }
 

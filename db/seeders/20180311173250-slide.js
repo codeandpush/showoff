@@ -4,11 +4,11 @@ const moment = require('moment')
 
 const items = [
     {
-        title: 'Slide 1',
+        title: 'OutLine: Two-part Guide',
         html: '<h1>Hello Slide 1</h1>'
     },
     {
-        title: 'Slide 1',
+        title: 'Introducing Web Application Development',
         html: `<h1>Hello Slide 2</h1>`
     },
 ]
