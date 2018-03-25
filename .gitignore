@@ -92,6 +92,8 @@ models/index.js
 # next.js build output
 .next
 
+models/song.js
+
 .idea
 /db/migrations/*
-/db/db.development.sqlite
+/db/db.*.sqlite

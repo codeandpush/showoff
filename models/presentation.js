@@ -10,11 +10,31 @@ class Presentation extends DbObject {
         return {
             title: DataTypes.STRING,
             description: DataTypes.STRING,
+            createdById: DataTypes.INTEGER
         }
     }
     
-    static associate(models) {
+    getSlides() {
+        const models = require('../models').sequelize.models
+        let options = {include:[{model: models.Slide, as: 'slide'}],
+            where: {
+                presentationId: this.get('id')
+            }
+        }
+        return models.PresentationSlide.findAll(options)
+            .then((pSlides) => {
+                return pSlides.map(ps => ps.slide)
+            })
+    }
     
+    static associate(models) {
+        models.Presentation.belongsTo(models.User, {
+            foreignKey: 'createdById', as: 'createdBy'
+        })
+        
+        models.Presentation.hasMany(models.PresentationSlide, {
+            foreignKey: 'presentationId', as: 'presentationSlides'
+        })
     }
 }
 

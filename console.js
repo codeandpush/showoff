@@ -21,6 +21,7 @@ models.sequelize.sync().then(function () {
     // attach my modules to the repl context
     replServer.context.epa = epa
     replServer.context.lo = require('lodash')
+    replServer.context.bz = require('bkendz')
     replServer.context.db = models
     replServer.context.moment = moment
 }).catch((error) => {

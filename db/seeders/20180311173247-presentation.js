@@ -6,6 +6,7 @@ const items = [
     {
         title: 'Electric Bike - 100 Mile Range!',
         description: 'Electric bike, 100 mile range, USB ports, 5 level pedal assist. ',
+        createdById: 1
     },
     {
         title: 'Epson EB-S31 Portable Projector',
@@ -26,6 +27,7 @@ Zoom: 1.35 x digital zoom
 Portable tripod projector screen (152x152cm) also available - see separate listing.
 
 Any questions, feel free to get in touch!`,
+        createdById: 1
     },
 ]
 

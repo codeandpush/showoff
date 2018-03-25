@@ -1,0 +1,7 @@
+
+<% tabs.forEach(function(tab) { %>
+<div role="tabpanel" class="tab-pane <%= defaultTab === tab.label.toLowerCase() ? 'active' : ''%>" id="<%= tab.label.toLowerCase() %>">
+    <h1><%= tab.content %></h1>
+    <div id="grid_<%= tab.label.toLowerCase() %>" style="height: 200px;width: 100%" class="ag-theme-fresh"></div>
+</div>
+<% }); %>

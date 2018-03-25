@@ -1,0 +1,28 @@
+{
+  "name": "Showoff",
+  "version": "1.0.0",
+  "User": {
+    "label": "user",
+    "requests": {
+      "index":{
+
+      },
+      "create": {
+        "type": "Request",
+        "params": {}
+      },
+      "read": {
+
+      }
+    }
+  },
+  "Service": {
+    "label": "service",
+    "requests": {
+       "/status": {
+         "type": "Request",
+         "params": {}
+       }
+    }
+  }
+}

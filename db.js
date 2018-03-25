@@ -8,6 +8,7 @@ module.exports = {
     },
     "test": {
         "dialect": "sqlite",
+        "dialectModulePath": path.resolve('./node_modules/sqlite3/sqlite3.js'),
         "storage": "db/db.test.sqlite"
     },
     "production": {

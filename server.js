@@ -3,55 +3,56 @@
  */
 const bz = require('bkendz')
 const models = require('./models')
-
+const _ = require('lodash')
 const app = new bz.Bkendz({models})
 
-const port = process.env.PORT || 9000
+const port = process.env.PORT || 9001
 console.log(`starting monitoring server on ${port}...`)
-app.listen(9000)
+app.listen(port)
 
 app.administerEnabled = true
 app.clientEnabled = true
 
-app.admin.on('', (request) => {
-    request.respond({display: 'Hello World'})
-})
-
-app.admin.onPrefChanged('')
+const libDb = require('./lib/db')
 
 app.admin.on('request', (messageHandler, request, conn) => {
     console.log('REQ:', request)
+    
+    if(request.topic.startsWith('/db_schema')){
+        request = {
+            data: libDb.schema(),
+            topic: request.topic,
+            type: 'utf8'
+        }
+    }
+    
     messageHandler.respond(conn, request)
 })
 
 app.api.create(models.User, (messageHandler, request) => {
-
-})
-
-app.api.update(models.User, (messageHandler, request) => {
-    messageHandler.respond({display: 'Hello World'})
 })
 
 app.api.service('/authenticate', (messageHandler, request) => {
 
 })
 
-app.adminWs.messageHandler.on('subscription_added', subject => {
+app.adminWs.handler.on('db_update', (updates) => {
+    for(let subscriberConn of app.adminWs.handler.subscribers['db_update'] || []){
+        subscriberConn.send('/subscribe?subject=db_update', {type: 'utf8', data:{updates}})
+    }
+})
+
+app.adminWs.handler.on('subscription_added', (subject) => {
         console.log('sending snapshot')
-        let models = require('./models')
-        let wsHandler = app.adminWs.messageHandler
-
-        models.User.all().then((users) => {
-            let updates = users.map(u => {
-                return {changeType: 'NEW', type: models.User.name, value: u.get({plain: true})}
+        let models = require('./models').sequelize.models
+        let wsHandler = app.adminWs.handler
+    
+        _.each(models, (cls, modelName) => {
+            cls.all().then((records) => {
+                let updates = records.map(u => {
+                    return {changeType: 'NEW', type: modelName, value: u.toJson()}
+                })
+                wsHandler.emit('db_update', updates)
             })
-            wsHandler.emit('db_update', updates)
-        })
-
-        models.Presentation.all().then((items) => {
-            let updates = items.map(u => {
-                return {changeType: 'NEW', type: models.Presentation.name, value: u.get({plain: true})}
-            })
-            wsHandler.emit('db_update', updates)
         })
 })
