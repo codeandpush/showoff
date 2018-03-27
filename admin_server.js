@@ -13,15 +13,22 @@ bz.Bkendz.SESSION_CLS_API = ShowoffApiSession
 
 const app = new bz.Bkendz({
     apiSheet: require('./mas.json'),
-    enableOnly: bz.Bkendz.PROCESS_NAME_CLIENT,
+    enableOnly: bz.Bkendz.PROCESS_NAME_ADMIN,
     standalone: true,
     optsClient: {staticPath: path.resolve(__dirname, './src')}
 })
 
-app.client.messageHandlers.http.set('views', path.resolve(__dirname, './views'))
+app.admin.messageHandlers.http.set('views', path.resolve(__dirname, './admin_views'))
 
-app.client.messageHandlers.http.get('/', (req, res) => {
-    res.render('index')
+app.admin.messageHandlers.http.get('/', (req, res) => {
+    let tabs = []
+    let schema = bz.db.schema()
+    _.each(schema, function (def, clsName) {
+        if(models[clsName].isJunction()) return
+        tabs.push({label: clsName, content: `Hello ${clsName}`})
+    })
+    
+    res.render('index', {tabs, defaultTab: 'user', schemaJson: JSON.stringify(schema, null, 4)})
 })
 
 app.api.on('message', (messageHandler, request, conn) => messageHandler.respond(conn, request))

@@ -13,6 +13,11 @@ const items = [
         description: 'Multi-part guide to setting up swift for development outside of iOS and macOS environments.',
         createdById: 1
     },
+    {
+        title: 'An experience-oriented guide to Web Development for non-coders',
+        description: 'A three-part guide to website client and server-side build out.',
+        createdById: 1
+    },
 ]
 
 module.exports = {
