@@ -30,6 +30,8 @@ class ShowoffApp extends EventEmitter3 {
         super()
         this.retryCount = {api: 0, server: 0}
         this.deferreds = {}
+        this._presentations = []
+        this._selectedPresentation = this._activeSlide = null
     }
     
     get elems() {
@@ -128,6 +130,52 @@ class ShowoffApp extends EventEmitter3 {
         this.api = this.connect(url, {connected: 'api_connected', disconnected: 'api_disconnected', retryCount: 'api'})
     }
     
+    addPresentations(presentations) {
+        let pres = []
+        for (let p of presentations) {
+            let ext = _.find(this.presentations, {id: p.id})
+            
+            if (ext) {
+                pres.push(_.merge(ext, p))
+            } else {
+                pres.push(p)
+            }
+        }
+        this.presentations = pres
+    }
+    
+    set presentations(presentations) {
+        this._presentations = presentations
+        this.emit('added_presentations', this._presentations)
+    }
+    
+    get presentations() {
+        return this._presentations
+    }
+    
+    set selectedPresentation(pres) {
+        this._selectedPresentation = pres
+        this.emit('selected_presentation', this._selectedPresentation)
+    }
+    
+    set activeSlide(slide) {
+        let old = this._activeSlide
+        this._activeSlide = slide
+        this.emit('active_slide', this._activeSlide, old)
+    }
+    
+    get activeSlide() {
+        return this._activeSlide
+    }
+    
+    get selectedPresentation() {
+        return this._selectedPresentation
+    }
+    
+    get slidesElem() {
+        return $(document.querySelector('#slides_container'))
+    }
+    
     init() {
         const emitWrap = (event) => {
             let emit = event.target.getAttribute(`data-emit-${event.type}`)
@@ -137,7 +185,6 @@ class ShowoffApp extends EventEmitter3 {
         ['keyup', 'click'].forEach((eventType) => {
             $(document).on(eventType, `[data-emit-${eventType}]`, emitWrap)
         })
-        
     }
 }
 
@@ -161,6 +208,112 @@ app.on('api_disconnected', () => {
 
 app.on('api_connected', () => {
     console.log('api connected')
+    
+    app.api.on('db_update', (snapshot) => {
+        let presentations = _.chain(snapshot.data.updates).map((update) => {
+            let value = update.value
+            if (value.type !== 'Presentation') return null
+            return value
+        }).compact().value()
+        
+        if (_.isEmpty(presentations)) return
+        app.addPresentations(presentations)
+    })
+})
+
+app.on('selected_presentation', (p) => {
+    
+    app.api.json(`/slides?presentationid=${p.id}`)
+        .then((res) => {
+            p.slides = res.data
+            app.activeSlide = _.first(res.data)
+        })
+})
+
+app.on('click_presentation', (e) => {
+    let presId = $(e.target).attr('data-presentationid')
+    let pres = _.find(app.presentations, {id: _.toInteger(presId)})
+    
+    if (!pres) return
+    app.selectedPresentation = pres
+})
+
+app.on('active_slide', (slide, oldSlide) => {
+    if(!_.isObject(slide)) return
+    
+    app.slidesElem.empty()
+    
+    let page = $(`
+            <div class="container" style="margin-top: 16%">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-4"><h3>${slide.title}</h3></div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-4">
+                        <div style="height: calc(100% - 32px);width: 100%">${slide.html}</div>
+                    </div>
+                </div>
+            </div>
+            `)
+    app.slidesElem.append(page)
+    
+    app.slidesElem.show()
+})
+
+app.on('click_close_presentation', () => {
+    app.slidesElem.hide()
+})
+
+app.on('transition_slide', (fwd) => {
+    let currentSide = app.activeSlide
+    if(!currentSide) return
+    
+    let slides = app.selectedPresentation.slides
+    let curIdx = _.findIndex(slides, {id: currentSide.id})
+    
+    if (curIdx < 0) return
+    if (fwd && ((curIdx + 1) >= slides.length)) return
+    if (!fwd && (curIdx === 0)) return
+    
+    app.activeSlide = fwd ? slides[curIdx + 1] : slides[curIdx - 1]
+})
+
+app.on('click_next_slide', (e) => app.emit('transition_slide', true))
+app.on('click_previous_slide', (e) => app.emit('transition_slide', false))
+
+app.on('keyup_stage', (e) => {
+    switch (e.which) {
+        case 39:
+            app.emit('transition_slide', true)
+            break
+        case 37:
+            app.emit('transition_slide', false)
+            break
+    }
+})
+
+app.on('added_presentations', (presentations) => {
+    let elem = $('#presentations')
+    elem.empty()
+    
+    let tmp = `
+<div class="col-md-4">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><a data-emit-click="presentation" data-presentationid="<%= id %>"><%= title %></a></h3>
+      </div>
+      <div class="panel-body">
+        <%= description %>
+      </div>
+    </div>
+</div>
+`
+    
+    let compiled = _.template(tmp)
+    for (let pres of presentations) {
+        let i = $(compiled(pres))
+        elem.append(i)
+    }
 })
 
 document.addEventListener('DOMContentLoaded', function () {

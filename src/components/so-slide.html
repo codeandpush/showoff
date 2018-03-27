@@ -1,4 +1,4 @@
-<template >
+<template>
 
 </template>
 
@@ -8,25 +8,6 @@
 
         constructor() {
             super()
-//
-//            this.addEventListener('click', e => {
-//                // Don't toggle the drawer if it's disabled.
-//                if (this.disabled) {
-//                    return;
-//                }
-//                this.toggleDrawer()
-//            })
-
-//            let tmpl = importedDoc.querySelector('#event-terminal-from-template')
-//
-//            let shadowRoot = this.attachShadow({mode: 'open'})
-//            shadowRoot.appendChild(tmpl.content.cloneNode(true))
-//            shadowRoot.documentElement = {}
-//
-//            var self = this
-//
-//            window._ELEM = this
-
         }
 
         /**
@@ -45,7 +26,7 @@
         }
 
         static get observedAttributes() {
-            return ['disabled', 'open', 'value'];
+            return ['disabled', 'value'];
         }
 
         attributeChangedCallback(attrName, oldVal, newVal) {
@@ -64,21 +45,6 @@
 
         }
 
-        // A getter/setter for an open property.
-        get open() {
-            return this.hasAttribute('open');
-        }
-
-        set open(val) {
-            // Reflect the value of the open property as an HTML attribute.
-            if (val) {
-                this.setAttribute('open', '');
-            } else {
-                this.removeAttribute('open');
-            }
-            this.toggleDrawer();
-        }
-
         // A getter/setter for a disabled property.
         get disabled() {
             return this.hasAttribute('disabled');
@@ -91,9 +57,6 @@
             } else {
                 this.removeAttribute('disabled');
             }
-        }
-
-        toggleDrawer() {
         }
     }
 </script>

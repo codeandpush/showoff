@@ -1,6 +1,7 @@
 /**
  * Created by anthony on 28/02/2016.
  */
+const _ = require('lodash')
 const repl = require('repl')
 const replHistory = require('repl.history')
 // environment configuration
@@ -20,10 +21,11 @@ models.sequelize.sync().then(function () {
     
     // attach my modules to the repl context
     replServer.context.epa = epa
-    replServer.context.lo = require('lodash')
+    replServer.context.lo = _
     replServer.context.bz = require('bkendz')
     replServer.context.db = models
     replServer.context.moment = moment
+    _.merge(replServer.context, {__dirname, __filename})
 }).catch((error) => {
     console.error(error)
 })

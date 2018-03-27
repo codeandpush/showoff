@@ -24,8 +24,6 @@ app.client.messageHandlers.http.get('/', (req, res) => {
     res.render('index')
 })
 
-app.api.on('message', (messageHandler, request, conn) => messageHandler.respond(conn, request))
-
 const wsHandler = app.api.messageHandlers.ws
 
 wsHandler.on('db_update', (updates) => {
