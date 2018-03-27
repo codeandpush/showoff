@@ -260,9 +260,11 @@ app.on('active_slide', (slide, oldSlide) => {
     app.slidesElem.show()
 })
 
-app.on('click_close_presentation', () => {
+app.on('close_presentation', () => {
     app.slidesElem.hide()
 })
+
+app.on('click_close_presentation', () => app.emit('close_presentation'))
 
 app.on('transition_slide', (fwd) => {
     let currentSide = app.activeSlide
@@ -282,12 +284,16 @@ app.on('click_next_slide', (e) => app.emit('transition_slide', true))
 app.on('click_previous_slide', (e) => app.emit('transition_slide', false))
 
 app.on('keyup_stage', (e) => {
+    console.log('key', e.which)
     switch (e.which) {
         case 39:
             app.emit('transition_slide', true)
             break
         case 37:
             app.emit('transition_slide', false)
+            break
+        case 27:
+            app.emit('close_presentation')
             break
     }
 })
