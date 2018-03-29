@@ -209,6 +209,8 @@ app.on('api_disconnected', () => {
 app.on('api_connected', () => {
     console.log('api connected')
     
+    if(!document.querySelector('#slides_container')) return
+    
     app.api.on('db_update', (snapshot) => {
         let presentations = _.chain(snapshot.data.updates).map((update) => {
             let value = update.value

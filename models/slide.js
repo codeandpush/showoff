@@ -21,7 +21,8 @@ class Slide extends DbObject {
         return {
             title: DataTypes.STRING,
             html: DataTypes.TEXT,
-            createdById: DataTypes.INTEGER
+            createdById: DataTypes.INTEGER,
+            variablesSchema: DataTypes.TEXT
         }
     }
     

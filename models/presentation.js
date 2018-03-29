@@ -1,4 +1,5 @@
 const DbObject = require('bkendz').DbObject
+const _ = require('lodash')
 
 class Presentation extends DbObject {
     
@@ -6,7 +7,7 @@ class Presentation extends DbObject {
         return {}
     }
     
-    static columnDefs(DataTypes) {
+    static columnDefs(DataTypes){
         return {
             title: DataTypes.STRING,
             description: DataTypes.STRING,

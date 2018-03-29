@@ -18,7 +18,8 @@ class PresentationSlide extends DbObject {
             presentationId: DataTypes.INTEGER,
             no: DataTypes.INTEGER,
             name: DataTypes.STRING,
-            slideId: DataTypes.INTEGER
+            slideId: DataTypes.INTEGER,
+            variables: DataTypes.TEXT
         }
     }
     
