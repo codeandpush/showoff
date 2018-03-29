@@ -14,7 +14,7 @@ bz.Bkendz.SESSION_CLS_API = ShowoffApiSession
 const app = new bz.Bkendz({
     apiSheet: require('./mas.json'),
     enableOnly: bz.Bkendz.PROCESS_NAME_CLIENT,
-    standalone: true,
+    standalone: _.isUndefined(process.env.STANDALONE) ? true : process.env.STANDALONE.toLowerCase() !== 'false',
     optsClient: {staticPath: path.resolve(__dirname, './src')}
 })
 
