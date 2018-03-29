@@ -2,7 +2,6 @@
  * Created by anthony on 29/03/2018.
  */
 const bz = require('bkendz')
-const models = require('./models')
 const _ = require('lodash')
 const path = require('path')
 const ShowoffSession = require('./session/client_session')
@@ -20,6 +19,7 @@ const app = new bz.Bkendz({
     optsClient: {staticPath: path.resolve(__dirname, './src')}
 })
 
+const models = app.api.models
 const wsHandler = app.api.messageHandlers.ws
 
 wsHandler.on('db_update', (updates) => {
