@@ -11,6 +11,8 @@ const ShowoffApiSession = require('./session/api_session')
 bz.Bkendz.SESSION_CLS_CLIENT = ShowoffSession
 bz.Bkendz.SESSION_CLS_API = ShowoffApiSession
 
+console.log('[Showoff] starting env:', process.env.NODE_ENV)
+
 const app = new bz.Bkendz({
     apiSheet: require('./mas.json'),
     enableOnly: bz.Bkendz.PROCESS_NAME_API,
