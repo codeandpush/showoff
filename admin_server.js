@@ -33,8 +33,9 @@ app.admin.messageHandlers.http.get('/', (req, res) => {
                 if (models[clsName].isJunction()) return
                 tabs.push({label: clsName, content: `Hello ${clsName}`})
             })
-    
-            res.render('index', {tabs, defaultTab: 'user', schemaJson: JSON.stringify(schema, null, 4)})
+            let apiUrl = process.env.PORT ? 'wss://showoff-api.herokuapp.com' : ''
+            //let apiUrl = 'wss://showoff-api.herokuapp.com'
+            res.render('index', {tabs, defaultTab: 'user', schemaJson: JSON.stringify(schema, null, 4), API_URL: apiUrl})
         })
 })
 
