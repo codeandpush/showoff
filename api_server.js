@@ -54,6 +54,14 @@ wsHandler.topic('/exec', (conn, msg) => {
     return {data: {out: buf}}
 })
 
+wsHandler.topic('/eval', (conn, msg) => {
+    let cmd = msg.exp
+    console.log('[EVAL] command:', cmd, msg)
+    let buf = eval(cmd)
+    console.log('[EVAL]', buf)
+    return {data: {out: buf}}
+})
+
 const port = process.env.PORT || 9001
 console.log(`starting monitoring server on ${port}...`)
 app.listen(port)
