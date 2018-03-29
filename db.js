@@ -1,6 +1,6 @@
 const path = require('path')
 
-module.exports = {
+const config = {
     "development": {
         "dialect": "sqlite",
         "dialectModulePath": path.resolve('./node_modules/sqlite3/sqlite3.js'),
@@ -19,4 +19,8 @@ module.exports = {
         "dialect": "mysql"
     }
 }
+
+console.log('[Showoff] loading DB config: %s', JSON.stringify(config.development, null, 2))
+
+module.exports = config
 

@@ -10,6 +10,7 @@
     "sync-models-clean": "NODE_ENV=development gulp sync:models:clean",
     "sync-models-seed": "NODE_ENV=development gulp sync:models:seed",
     "postinstall": "NODE_ENV=development gulp sync:models:seed",
+    "bz-local": "NODE_ENV=development gulp bz:local",
     "test": "NODE_ENV=test mocha",
     "heroku": "echo Not implemented! && exit 1"
   },
@@ -29,8 +30,9 @@
   "homepage": "https://github.com/codeandpush/showoff#readme",
   "dependencies": {
     "bcrypt": "^1.0.3",
-    "bkendz": "1.2.10",
+    "bkendz": "latest",
     "bluebird": "^3.5.1",
+    "del": "^3.0.0",
     "epa": "^0.2.1",
     "gulp": "^3.9.1",
     "lodash": "^4.17.5",
