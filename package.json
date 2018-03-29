@@ -27,7 +27,7 @@
   "homepage": "https://github.com/codeandpush/showoff#readme",
   "dependencies": {
     "bcrypt": "^1.0.3",
-    "bkendz": "file:../bkendz",
+    "bkendz": "1.2.6",
     "bluebird": "^3.5.1",
     "epa": "^0.2.1",
     "gulp": "^3.9.1",
