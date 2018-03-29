@@ -35,6 +35,8 @@
     "lodash": "^4.17.5",
     "moment": "^2.21.0",
     "repl.history": "^0.1.4",
+    "sequelize": "^3.32.1",
+    "sequelize-cli": "^2.6.0",
     "sqlite3": "^4.0.0"
   },
   "devDependencies": {
