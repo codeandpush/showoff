@@ -8,6 +8,7 @@
     "start-admin": "NODE_ENV=development node admin_server.js",
     "sync-models-clean": "NODE_ENV=development gulp sync:models:clean",
     "sync-models-seed": "NODE_ENV=development gulp sync:models:seed",
+    "postinstall": "NODE_ENV=development gulp sync:models:seed",
     "test": "NODE_ENV=test mocha",
     "heroku": "echo Not implemented! && exit 1"
   },
