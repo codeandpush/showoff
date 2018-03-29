@@ -19,7 +19,7 @@ const app = new bz.Bkendz({
     optsClient: {staticPath: path.resolve(__dirname, './src')}
 })
 
-const models = app.api.models
+app.api._models = require('./models')
 const wsHandler = app.api.messageHandlers.ws
 
 wsHandler.on('db_update', (updates) => {
