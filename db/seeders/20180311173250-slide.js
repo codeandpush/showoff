@@ -11,6 +11,10 @@ const items = [
         title: 'Introducing Web Application Development',
         html: `<h1>Hello Slide 2</h1>`
     },
+    {
+        title: 'Lessons Learnt - Haminata',
+        html: `<h1>Hello Slide 3</h1>`
+    },
 ]
 
 module.exports = {
