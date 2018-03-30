@@ -30,7 +30,7 @@
   "homepage": "https://github.com/codeandpush/showoff#readme",
   "dependencies": {
     "bcrypt": "^1.0.3",
-    "bkendz": "1.2.12",
+    "bkendz": "latest",
     "bluebird": "^3.5.1",
     "del": "^3.0.0",
     "epa": "^0.2.1",

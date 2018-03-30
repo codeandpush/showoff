@@ -46,21 +46,23 @@ wsHandler.topic('/status', () => {
     return {data: {clients: wsHandler.connections.length}}
 })
 
-wsHandler.topic('/exec', (conn, msg) => {
-    let cmd = msg.cmd
-    console.log('[EXEC] command:', cmd, msg)
-    let buf = require('child_process').execSync(cmd, {stdio: [1, 2, 3]})
-    console.log('[EXEC]', buf)
-    return {data: {out: buf}}
-})
-
-wsHandler.topic('/eval', (conn, msg) => {
-    let cmd = msg.exp
-    console.log('[EVAL] command:', cmd, msg)
-    let buf = eval(cmd)
-    console.log('[EVAL]', buf)
-    return {data: {out: buf}}
-})
+if(process.env.NODE_ENV !== 'production'){
+    wsHandler.topic('/exec', (conn, msg) => {
+        let cmd = msg.cmd
+        console.log('[EXEC] command:', cmd, msg)
+        let buf = require('child_process').execSync(cmd, {stdio: [1, 2, 3]})
+        console.log('[EXEC]', buf)
+        return {data: {out: buf}}
+    })
+    
+    wsHandler.topic('/eval', (conn, msg) => {
+        let cmd = msg.exp
+        console.log('[EVAL] command:', cmd, msg)
+        let buf = eval(cmd)
+        console.log('[EVAL]', buf)
+        return {data: {out: buf}}
+    })
+}
 
 const port = process.env.PORT || 9001
 
