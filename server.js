@@ -27,7 +27,7 @@ app.client.messageHandlers.http.get('/', (req, res) => {
 app.client.messageHandlers.http.get('/slides/:id', (req, res) => {
     let slideId = _.toInteger(req.params.id)
     
-    app.api.models.Slide.findById(slideId).then(s => res.render('edit_slide', {slide: s.toJson()}))
+    res.render('edit_slide', {slide: {title: `Test ${slideId}`}})
 })
 
 const wsHandler = app.api.messageHandlers.ws
