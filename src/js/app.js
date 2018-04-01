@@ -32,6 +32,7 @@ class ShowoffApp extends EventEmitter3 {
         this.deferreds = {}
         this._presentations = []
         this._selectedPresentation = this._activeSlide = null
+        this.apiLocation = null
     }
     
     get elems() {
@@ -126,7 +127,8 @@ class ShowoffApp extends EventEmitter3 {
     }
     
     connectToApi() {
-        let url = location.hostname.indexOf('localhost') === -1 ? 'wss://showoff-api.herokuapp.com' : 'ws://localhost:9001'
+        if(!this.apiLocation) throw Error('No API location provided!')
+        let url = this.apiLocation[location.protocol === 'http:' ? 'ws' : 'wss']
         this.api = this.connect(url, {connected: 'api_connected', disconnected: 'api_disconnected', retryCount: 'api'})
     }
     
@@ -199,6 +201,13 @@ app.on('server_disconnected', () => {
 app.on('server_connected', () => {
     console.log('server connected')
     app.elems.connectionAlert.slideUp().hide()
+    
+    if(!app.apiLocation){
+        app.server.json('/api', location).then((res) => {
+            app.apiLocation = res.data
+            app.connectToApi()
+        })
+    }
 })
 
 app.on('api_disconnected', () => {
@@ -275,7 +284,6 @@ app.on('click_next_slide', (e) => app.emit('transition_slide', true))
 app.on('click_previous_slide', (e) => app.emit('transition_slide', false))
 
 app.on('keyup_stage', (e) => {
-    console.log('key', e.which)
     switch (e.which) {
         case 39:
             app.emit('transition_slide', true)
@@ -319,6 +327,5 @@ document.addEventListener('DOMContentLoaded', function () {
     app.init()
     
     app.connectToServer()
-    app.connectToApi()
     
 })

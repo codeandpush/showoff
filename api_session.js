@@ -7,20 +7,21 @@ const _ = require('lodash')
 
 class ShowoffApiSession extends ApiSessionHandler {
     
+    static supportedTopics(){
+        return ['/slides']
+    }
+    
     onMessage(topic, request){
-        console.log('API recieved...', request)
-        let parsed = url.parse(request.topic, true)
+        let presentationid = request.presentationid
         switch (topic){
             case '/slides':
-                return this.models.Presentation.findById(parsed.query.presentationid)
+                return this.models.Presentation.findById(presentationid)
                     .then(p => p.getSlides())
                     .then((slides) => {
-                        request.data = slides.map((s) => s.toJson())
-                        return request
+                        return _.map(slides, (s) => s.toJson())
                     })
         }
     }
-    
 }
 
 let api = new ShowoffApiSession({apiSheet: require('./mas.json')})
