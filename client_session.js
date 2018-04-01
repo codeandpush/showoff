@@ -4,11 +4,17 @@
 const {SessionHandler} = require('bkendz')
 const _ = require('lodash')
 const path = require('path')
+const utils = require('./lib/utils')
 
 class ShowoffSession extends SessionHandler {
 
     onMessage(topic, request){
         console.log('Client recieved...', request)
+    }
+    
+    onApiLocation(req){
+        let hostname = (req.msg.data || {}).hostname
+        return utils.getApiLocation(hostname)
     }
 
 }
