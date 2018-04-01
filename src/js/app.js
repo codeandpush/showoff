@@ -245,18 +245,7 @@ app.on('active_slide', (slide, oldSlide) => {
     
     app.slidesElem.empty()
     
-    let page = $(`
-            <div class="container" style="margin-top: 16%">
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-4"><h3>${slide.title}</h3></div>
-                </div>
-                <div class="row">
-                    <div class="col-md-8 col-md-offset-4">
-                        <div style="height: calc(100% - 32px);width: 100%">${slide.html}</div>
-                    </div>
-                </div>
-            </div>
-            `)
+    let page = $(slide.html)
     app.slidesElem.append(page)
     
     app.slidesElem.show()
