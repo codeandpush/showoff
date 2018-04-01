@@ -20,12 +20,5 @@ const config = {
     }
 }
 
-const fs = require('fs')
-const files = fs.readdirSync('./db')
-console.log('[Showoff] loading DB config: %s', JSON.stringify(config.development, null, 2))
-console.log('[-------]   files in \'db\':', files)
-
-
-
 module.exports = config
 

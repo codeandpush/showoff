@@ -1,26 +1,31 @@
 /**
- * Created by anthony on 29/03/2018.
+ * Created by anthony on 26/03/2018.
  */
-const bz = require('bkendz')
+const {ApiSessionHandler} = require('bkendz')
+const url = require('url')
 const _ = require('lodash')
-const path = require('path')
-const ShowoffSession = require('./session/client_session')
-const ShowoffApiSession = require('./session/api_session')
 
-bz.Bkendz.SESSION_CLS_CLIENT = ShowoffSession
-bz.Bkendz.SESSION_CLS_API = ShowoffApiSession
+class ShowoffApiSession extends ApiSessionHandler {
+    
+    onMessage(topic, request){
+        console.log('API recieved...', request)
+        let parsed = url.parse(request.topic, true)
+        switch (topic){
+            case '/slides':
+                return this.models.Presentation.findById(parsed.query.presentationid)
+                    .then(p => p.getSlides())
+                    .then((slides) => {
+                        request.data = slides.map((s) => s.toJson())
+                        return request
+                    })
+        }
+    }
+    
+}
 
-console.log('[Showoff] starting env:', process.env.NODE_ENV)
+let api = new ShowoffApiSession({apiSheet: require('./mas.json')})
 
-const app = new bz.Bkendz({
-    apiSheet: require('./mas.json'),
-    enableOnly: bz.Bkendz.PROCESS_NAME_API,
-    standalone: _.isUndefined(process.env.STANDALONE) ? true : process.env.STANDALONE.toLowerCase() !== 'false',
-    optsClient: {staticPath: path.resolve(__dirname, './src')}
-})
-
-app.api._models = require('./models')
-const wsHandler = app.api.messageHandlers.ws
+const wsHandler = api.messageHandlers.ws
 
 wsHandler.on('db_update', (updates) => {
     for (let subscriberConn of wsHandler.subscribers['db_update'] || []) {
@@ -30,7 +35,7 @@ wsHandler.on('db_update', (updates) => {
 
 wsHandler.on('subscription_added', (subject) => {
     console.log('sending snapshot')
-    let models = require('./models').sequelize.models
+    let models = api.models
     
     _.each(models, (cls, modelName) => {
         cls.all().then((records) => {
@@ -64,7 +69,4 @@ if(process.env.NODE_ENV !== 'production'){
     })
 }
 
-const port = process.env.PORT || 9001
-
-console.log(`starting monitoring server on ${port}...`)
-app.listen(port)
+module.exports = {ShowoffApiSession, default: api}

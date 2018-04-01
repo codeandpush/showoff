@@ -5,8 +5,8 @@
   "main": "server.js",
   "scripts": {
     "start": "NODE_ENV=development STANDALONE=false node api_server.js",
-    "start-standalone": "NODE_ENV=development STANDALONE=false node server.js",
-    "start-admin": "NODE_ENV=development node admin_server.js",
+    "start-standalone": "NODE_ENV=development STANDALONE=true node server.js",
+    "start-admin": "NODE_ENV=development STANDALONE=true BZ_PROCESS_NAME=admin node server.js",
     "sync-models-clean": "NODE_ENV=development gulp sync:models:clean",
     "sync-models-seed": "NODE_ENV=development gulp sync:models:seed",
     "postinstall": "NODE_ENV=development gulp sync:models:seed",
@@ -30,7 +30,7 @@
   "homepage": "https://github.com/codeandpush/showoff#readme",
   "dependencies": {
     "bcrypt": "^1.0.3",
-    "bkendz": "latest",
+    "bkendz": "file:../bkendz",
     "bluebird": "^3.5.1",
     "del": "^3.0.0",
     "epa": "^0.2.1",
