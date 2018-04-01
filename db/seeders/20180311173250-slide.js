@@ -13,7 +13,7 @@ const items = [
     },
     {
         title: 'Lessons Learnt - Haminata',
-        html: `<iframe height="100%" width="100%" src="http://corycamaraunikaa.wixsite.com" frameborder="0"/>`
+        html: `<h1>Hello Slide 3</h1>`
     },
 ]
 
