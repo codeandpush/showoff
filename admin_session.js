@@ -6,16 +6,12 @@ const path = require('path')
 const _ = require('lodash')
 const utils = require('./lib/utils')
 
-const admin = new bz.AdministerSession()
+const admin = new bz.AdministerSession({viewPath: path.resolve(__dirname, './admin_views')})
 
 admin.onApiLocation = function(req){
-    console.log('[ADMIN]', req.msg.data)
     let hostname = (req.msg.data || {}).hostname
-    
     return utils.getApiLocation(hostname)
 }
-
-admin.messageHandlers.http.set('views', path.resolve(__dirname, './admin_views'))
 
 admin.messageHandlers.http.get('/', (req, res) => {
     let tabs = []
