@@ -19,9 +19,10 @@ module.exports = {
       const render = _.template(templateStr)
       
       let prods = _(items)
-          .map((value) => {
+          .map((value, idx) => {
             let updates = {createdAt: new Date(), updatedAt: new Date()}
-            updates.html = render({slide: value})
+            updates.html = value.html.indexOf('</canvas>') !== -1 ? value.html : render({slide: value})
+              console.log(updates.html)
             return _.merge(value, updates)
           })
           .value()
@@ -37,7 +38,11 @@ module.exports = {
 const items = [
     {
         title: 'OutLine: Two-part Guide',
-        html: `<h1>Hello Slide 1</h1>`
+        html: `<h3> Selim Tezel's 3D Cube Simulator</h3>
+Use the up-down-right-left arrow keys and the "a" and "z" keys to rotate the shape in 3D along the x,y,z axis <br/><br/>
+<canvas id="myCanvas" width="650" height="400" style="border: 1px solid #d3d3d3;">
+Your browser does not support the canvas element.
+</canvas><script type="application/javascript" src="js/cube.js">`
     },
     {
         title: 'Introducing Web Application Development',
